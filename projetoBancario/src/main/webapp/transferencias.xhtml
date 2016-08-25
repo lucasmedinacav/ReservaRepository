@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+<h:body>
+	<h:form id="formTransf" prependId="false">
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" />
+		<h:panelGrid columns="2">
+			<h:panelGroup>
+				<h:outputLabel
+					value="Selecione o cliente que irá realizar a transferência:"
+					for="cmbCliOrigem" />
+				<br />
+				<p:selectOneMenu id="cmbCliOrigem"
+					value="#{transferenciaBean.cliOrigemSelec}"
+					converter="clienteConverter">
+					<f:selectItem value="#{null}" itemLabel="Selecione" />
+					<f:selectItems value="#{transferenciaBean.listaClientesOrigem}"
+						itemValue="#{cliOrigem}" itemLabel="#{cliOrigem.nome}"
+						var="cliOrigem" />
+					<p:ajax listener="#{transferenciaBean.gerarListaDestino()}"
+						update="cmbCliDestino, cmbContaOrigem" />
+				</p:selectOneMenu>
+			</h:panelGroup>
+
+			<h:panelGroup>
+				<h:outputLabel value="Selecione o cliente que irá receber o valor:"
+					for="cmbCliDestino" />
+				<br />
+				<p:selectOneMenu value="#{transferenciaBean.cliDestinoSelec}"
+					id="cmbCliDestino" converter="clienteConverter">
+					<f:selectItem value="#{null}" itemLabel="Selecione" />
+					<f:selectItems value="#{transferenciaBean.listaClientesDestino}"
+						itemValue="#{cliDest}" itemLabel="#{cliDest.nome}" var="cliDest" />
+					<p:ajax listener="#{transferenciaBean.obterContasDestino()}"
+						update="cmbContaDest" />
+				</p:selectOneMenu>
+			</h:panelGroup>
+
+			<h:panelGroup>
+				<h:outputLabel value="Selecione a conta que será retirado o valor:"
+					for="cmbContaOrigem" />
+				<br />
+				<p:selectOneMenu id="cmbContaOrigem"
+					value="#{transferenciaBean.contaOrigemSelec}"
+					converter="contaConverter">
+					<f:selectItem value="#{null}" itemLabel="Selecione" />
+					<f:selectItems value="#{transferenciaBean.listaContasOrigem}"
+						itemValue="#{contaOrigem}" itemLabel="#{contaOrigem.numero}"
+						var="contaOrigem" />
+					<p:ajax update="txtSaldoOrigem" />
+				</p:selectOneMenu>
+			</h:panelGroup>
+
+			<h:panelGroup>
+				<h:outputLabel value="Selecione a conta que receberá o valor:"
+					for="cmbContaDest" />
+				<br />
+				<p:selectOneMenu value="#{transferenciaBean.contaDestinoSelec}"
+					id="cmbContaDest" converter="contaConverter">
+					<f:selectItem value="#{null}" itemLabel="Selecione" />
+					<f:selectItems value="#{transferenciaBean.listaContasDestino}"
+						itemValue="#{contaDest}" itemLabel="#{contaDest.numero}"
+						var="contaDest" />
+					<p:ajax update="txtSaldoDestino" />
+				</p:selectOneMenu>
+			</h:panelGroup>
+
+			<h:panelGroup>
+				<h:outputText id="txtSaldoOrigem"
+					value="Saldo: R$ #{transferenciaBean.contaOrigemSelec.saldo}" />
+			</h:panelGroup>
+
+			<h:panelGroup>
+				<h:outputText id="txtSaldoDestino"
+					value="Saldo: R$ #{transferenciaBean.contaDestinoSelec.saldo}" />
+			</h:panelGroup>
+
+			<h:panelGroup>
+				<h:outputText value="Valor a ser transferido: R$  " />
+				<h:inputText id="txtValor" value="#{transferenciaBean.valor}" />
+			</h:panelGroup>
+
+			<h:panelGroup>
+				<h:outputText value="Digite sua senha:  " />
+				<p:password id="txtSenha" value="#{transferenciaBean.senha}"
+					maxlength="6" size="7" />
+			</h:panelGroup>
+
+			<h:panelGroup>
+				<h:outputText value="Data da Tranferência:  " />
+				<p:calendar id="dtAgendamento"
+					value="#{transferenciaBean.dtAgendamento}" pattern="dd/MM/yyyy"
+					mask="true" />
+			</h:panelGroup>
+
+			<h:panelGroup>
+				<h:outputText value="Tipo de Transferência" />
+				<h:selectOneMenu id="cmbTipoTransf"
+					value="#{transferenciaBean.tipoTransferencia}">
+					<f:selectItem itemLabel="Selecione" itemValue="0" />
+					<f:selectItem itemLabel="A" itemValue="1" />
+					<f:selectItem itemLabel="B" itemValue="2" />
+					<f:selectItem itemLabel="C" itemValue="3" />
+					<f:selectItem itemLabel="D" itemValue="4" />
+				</h:selectOneMenu>
+			</h:panelGroup>
+
+			<h:commandButton value="Transferir"
+				action="#{transferenciaBean.transferir()}" />
+		</h:panelGrid>
+	</h:form>
+</h:body>
+</html>
